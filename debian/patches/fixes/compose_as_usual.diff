@@ -1,0 +1,32 @@
+From: Michael Schutte <michi@uiae.at>
+Subject: [PATCH] fixes/compose_as_usual
+
+Make “compose as usual” compatible to Unicode diacritics, closes: #600006.
+
+struct ccc in compose_as_usual() (loadkeys.y) used three signed char
+members, which became a problem with the kbdiacruc implementation:
+results > 127 ended up as negative integers in the accent table.  A
+simple substitution of “unsigned char” for “char” in the struct
+definition does the job.
+
+Signed-off-by: Michael Schutte <michi@uiae.at>
+
+---
+ src/loadkeys.y |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/loadkeys.y b/src/loadkeys.y
+index 03654ac..17016c8 100644
+--- a/src/loadkeys.y
++++ b/src/loadkeys.y
+@@ -1160,7 +1160,7 @@ compose_as_usual(char *charset) {
+ 		exit(1);
+ 	} else {
+ 		struct ccc {
+-			char c1, c2, c3;
++			unsigned char c1, c2, c3;
+ 		} def_latin1_composes[68] = {
+ 			{ '`', 'A', 0300 }, { '`', 'a', 0340 },
+ 			{ '\'', 'A', 0301 }, { '\'', 'a', 0341 },
+-- 
+tg: (cfffc72..) fixes/compose_as_usual (depends on: upstream/master)
