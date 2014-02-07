@@ -1,3 +1,136 @@
+kbd (1.15.3-9) unstable; urgency=low
+
+  * Revert the build-dependency change towards gettext:any and let the buildds
+    do their work again, closes: #670778.
+
+ -- Michael Schutte <michi@debian.org>  Sun, 29 Apr 2012 09:43:38 +0200
+
+kbd (1.15.3-8) unstable; urgency=low
+
+  * Set debian/compat to 9 and build-depend on debhelper >= 9.
+  * Support cross-building, closes: #670653.  Thanks to Colin Watson
+    <cjwatson@ubuntu.com> for the patch.
+    - Allow the gettext build-dep to be satisfied by a package of any
+      architecture.
+    - Use dh_auto_configure.
+    - Explicitly set the host CC to cross-build the contrib binaries.
+  * Trigger font setup when any of CONSOLE_FONT, CONSOLE_MAP, or FONT_MAP are
+    present in /etc/kbd/config, closes: #647153.
+  * Point Format: in debian/copyright to the 1.0 version of the
+    machine-readable copyright spec.
+  * Update manpages.diff: Minor fixes to the setleds(1) manual page, closes:
+    #663252.  Thanks to Bjarni Ingi Gislason <bjarniig@rhi.hi.is> for the
+    patch.
+  * Provide a no-op “status” option for /etc/init.d/kbd.
+  * Bump Standards-Version: to 3.9.3, no changes necessary.
+
+ -- Michael Schutte <michi@debian.org>  Sat, 28 Apr 2012 11:47:07 +0200
+
+kbd (1.15.3-7) unstable; urgency=low
+
+  * Use dpkg-buildflags to pass build options on to the configure
+    script; build-depend on dpkg-dev >= 1.16.1 accordingly.
+  * Set debian/compat to 8 and build-depend on debhelper >= 8.
+  * Don’t depend on console-setup | console-common to break up a
+    dependency loop.  The default configuration does not require any
+    files from console-data (which is pulled in through console-common)
+    or console-setup, so this should be a safe change.  Both packages
+    are still alternatives in Recommends:.
+  * Package relationship cleanup:
+    - Drop minimum version from the console-data recommendation (the
+      mentioned revision is from 2001).
+    - Don’t Breaks:/Replaces: util-linux (relevant revisions before
+      early 2001).
+    - Don’t conflict with kbd-data, which hasn’t been around since
+      Slink.
+    - Get rid of all mentions of “open” (from the Slink era too).  This
+      name is only provided by console-tools and kbd these days, which
+      already conflict via console-utilities.  There also aren’t any
+      dependencies on it in the archive.
+  * Fix some deviations from DEP 5 in debian/copyright.
+  * Rename patch openvt_error_handling to openvt and update it to not
+    exit with a zero status code if there was an invocation error,
+    closes: #642324.
+
+ -- Michael Schutte <michi@debian.org>  Fri, 23 Sep 2011 22:54:08 +0200
+
+kbd (1.15.3-6) unstable; urgency=low
+
+  * Experimentally drop reset_vga_palette from /etc/init.d/kbd, closes:
+    #637277.
+  * Build for Architecture: linux-any to help clean up Not-For-Us.
+
+ -- Michael Schutte <michi@debian.org>  Mon, 22 Aug 2011 20:57:00 +0200
+
+kbd (1.15.3-5) unstable; urgency=low
+
+  * Move away from topgit: Export the patches to debian/patches/ one
+    last time and maintain them with quilt in the future.
+  * Use the occasion to make the patch headers more DEP-3-y.
+  * Add a manual page for setvtrgb(1) introduced in 1.15.3.
+  * debian/copyright: List copyright holders for setvtrgb.c and set
+    Format: to the frozen DEP URL.
+
+ -- Michael Schutte <michi@debian.org>  Sat, 23 Jul 2011 11:50:09 +0200
+
+kbd (1.15.3-4) unstable; urgency=low
+
+  * Remove a superfluous call to wait() in openvt.c to propagate the
+    exit code of the child process of “openvt -w”, closes: #630108.
+  * Write and ship a manual page for the kbdinfo(1) utility introduced with
+    1.15.3.
+
+ -- Michael Schutte <michi@debian.org>  Sun, 12 Jun 2011 12:49:42 +0200
+
+kbd (1.15.3-3) unstable; urgency=low
+
+  * debian/rules clean: Force regeneration of loadkeys.c and
+    loadkeys.analyze.c, closes: #629180, #629191.
+  * Manually clean some .gmo files in po/.
+
+ -- Michael Schutte <michi@debian.org>  Sat, 04 Jun 2011 15:28:44 +0200
+
+kbd (1.15.3-2) unstable; urgency=low
+
+  * New patch loadkeys_stdin, taken from upstream Git: A regression in
+    the loadkeys program caused it to read no files at all, rather than
+    stdin, when called without arguments.  This broke, for instance, the
+    /etc/init.d/kbd script.
+  * Point debian/copyright to the frozen revision of DEP 5, which is the
+    one now shipped in debian-policy.
+
+ -- Michael Schutte <michi@debian.org>  Fri, 03 Jun 2011 12:40:56 +0200
+
+kbd (1.15.3-1) unstable; urgency=low
+
+  * New upstream release.
+    - Drop the compose_as_usual patch (merged upstream).
+    - Includes Dustin Kirkland’s setvtrgb utility, closes: #617416; and
+      kbdinfo, vaguely based on Julien Cristau’s VT mode query code,
+      closes: #618573.
+    - Reflect changes to the build system in debian/rules.
+    - Spanish translations had to be dropped due to problems with the
+      es.po file.
+  * Upgrade Standards-Version to 3.9.2, no changes needed.
+  * Point Vcs-* to anonscm.debian.org.
+
+ -- Michael Schutte <michi@debian.org>  Wed, 25 May 2011 21:48:07 +0200
+
+kbd (1.15.2-3) unstable; urgency=low
+
+  * Bump Priority: to optional (while downgrading console-tools to extra),
+    closes: #591146.
+  * Change my e-mail address in Uploaders:, debian/copyright and patches.
+  * Update debian/copyright format to the current revision of DEP-5.
+  * Patch manpages:
+    - Document that the -e switch requires openvt to be a session leader,
+      closes: #610373.
+    - Give in to lintian concerning the *superflous typo in mk_modmap(8).
+  * Breaks: util-linux (<< 2.11) instead of conflicting with it, as per Policy
+    7.6.1: This was because of kbdrate moving packages.
+
+ -- Michael Schutte <michi@debian.org>  Sat, 19 Feb 2011 11:38:00 +0100
+
 kbd (1.15.2-2) unstable; urgency=low
 
   * New patch compose_as_usual: Fix the Unicode conversion of the internal

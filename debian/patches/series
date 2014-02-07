@@ -1,5 +1,5 @@
-fixes/kbd_mode.diff -p1
-fixes/manpages.diff -p1
-fixes/openvt_error_handling.diff -p1
-fixes/unicode_start_breaks_X.diff -p1
-fixes/compose_as_usual.diff -p1
+kbd_mode.diff
+manpages.diff
+openvt.diff
+unicode_start_breaks_X.diff
+loadkeys_stdin.diff
