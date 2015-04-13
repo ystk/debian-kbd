@@ -1,3 +1,27 @@
+kbd (1.15.5-2) unstable; urgency=medium
+
+  * Not updating to the new upstream version 2.0.2, as it contains major
+    changes (including a shared object for most of dumpkeys' and loadkeys'
+    features) and we're close to the freeze.
+  * /etc/init.d/kbd: More accurately detect allocated ttys in /etc/inittab,
+    closes: #744973.
+  * /etc/init.d/kbd: Instead of checking for console access based on fgconsole
+    and the file behind FD 0, use the test_console function from
+    console-setup's setupcon.  This makes the script run even under systemd,
+    closes: #750631.
+  * /etc/init.d/kbd: Parse /etc/systemd/logind.conf, if available, to find the
+    list of VTs to configure.
+  * README.Debian: Information on console-setup and its predecessors, closes:
+    #750814.  Thanks to Osamu Aoki for the patch.
+  * debian/rules: Remove the -u parameter from dh_installinit, as update-rc.d
+    no longer supports the “start” option.
+  * Fix a few typos in debian/copyright, courtesy of lintian.
+  * Update Standards-Version to 3.9.6, no source changes required.
+  * Medium urgency upload so we get a couple of days in testing before the
+    freeze.
+
+ -- Michael Schutte <michi@debian.org>  Sat, 25 Oct 2014 19:46:15 +0200
+
 kbd (1.15.5-1) unstable; urgency=low
 
   * New upstream release.
